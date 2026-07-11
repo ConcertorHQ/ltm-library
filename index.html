@@ -205,6 +205,38 @@
   details.xp>summary{cursor:pointer;font-family:var(--disp);font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding:8px 0;list-style-position:inside}
   details.xp[open]>summary{color:var(--accent)}
   details.xp>.tree{margin-top:4px}
+  /* ===== 2026-07-11 surface-drawer rework: playbook / checklist / queue / inventory / decision sheet / obituary ===== */
+  .pbk{max-width:100ch;margin:0 0 16px 6px;border-left:2px solid var(--line);padding-left:14px}
+  .pbk h3{font-family:var(--disp);font-size:15.5px;letter-spacing:.3px;margin:18px 0 4px}
+  .pbk h3:first-child{margin-top:6px}
+  .idm{font-family:var(--mono);font-size:10.5px;color:var(--muted);font-weight:normal;letter-spacing:.4px}
+  .stag{font-family:var(--mono);font-size:10px;letter-spacing:.5px;padding:1px 7px;border:1px solid;margin-left:8px;vertical-align:2px;font-weight:normal}
+  .stag.ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+  .stag.stg{background:#E0F2F7;color:#0E7490;border-color:#0E7490}
+  .stag.blk{background:var(--crit-soft);color:var(--crit);border-color:var(--crit)}
+  .stag.dn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+  .stag.hot{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+  .stag.dead{background:var(--crit-soft);color:var(--crit);border-color:var(--crit)}
+  .stag.gap{background:#F0E6F7;color:#7A3FA8;border-color:#7A3FA8}
+  .stag.park{color:var(--park);border-color:var(--park);background:#EEF0EE}
+  .pbk p{margin:4px 0 6px;font-size:13.5px;line-height:1.5}
+  .spec{display:block;font-family:var(--mono);font-size:11px;background:#F6F7F5;border:1px solid var(--line);padding:5px 8px;color:var(--ink);margin:2px 0 6px;white-space:pre-wrap}
+  .queue{max-width:100ch;margin:0 0 12px;padding-left:30px}
+  .queue li{margin:0 0 10px;font-size:13.5px;line-height:1.5}
+  .queue li::marker{font-family:var(--mono);font-weight:bold;color:var(--accent)}
+  .inv{max-width:100ch;margin:0 0 8px 6px;border-left:2px solid var(--line);padding:0 0 0 14px;list-style:none}
+  .inv li{margin:0 0 8px;font-size:13.5px;line-height:1.5}
+  .inv li b{font-family:var(--disp);letter-spacing:.2px}
+  .dsheet{max-width:100ch;margin:0 0 12px;padding-left:30px}
+  .dsheet li{margin:0 0 11px;font-size:13.5px;line-height:1.5}
+  .dsheet li b{font-family:var(--disp)}
+  .gl{border-bottom:1px dotted var(--muted);cursor:help}
+  .ledger tr.rowreex td{background:var(--warn-soft)}
+  .ledger.plain td{font-size:12px;padding:6px 8px;line-height:1.45}
+  .ledger.plain td:first-child{font-family:var(--body);white-space:normal;font-weight:600;min-width:170px}
+  .ledgerwrap.tall{max-height:none;overflow:visible}
+  .ledgerwrap.tall .ledger th{position:static}
+  .plainintro{font-size:13px;color:var(--muted);margin:0 0 6px;max-width:100ch}
   </style>
 
 <div class="wrap">
@@ -562,6 +594,67 @@
 <section id="dm" class="drawer">
   <h2>Setups To Test — new trade ideas headed for the sweep (dest B · staged 2026-07-10/11)</h2>
   <p class="lead">New surface: mechanism candidates headed for the operator-managed trigger-lab sweep terminal (separate terminal; feeds bets 2/4 and the Stage-B corpus — Stage B waits on sweep results). Every candidate ends at SHADOW-READY; no HYDRA wiring. Sources: <span class="num">SUGGESTIONS_TRIAGE.md §3</span>, <span class="num">DISCORD_MINE_DIGEST §3</span>, <span class="num">CONDITIONAL_CHECKS_2026_07_11.md</span>.</p>
+
+  <div class="pbk">
+    <h3>The trapped breakdown of the hour candle <span class="stag stg">STAGE-1</span> <span class="idm">M-03 · TRAP/CARRY · = port A3/A3b</span></h3>
+    <p>Pick an anchor candle on a higher timeframe — 60, 120 or 240 minutes. The moment its first half completes, freeze three prices: the first-half high, the first-half low, and the midpoint between them. Now watch for a trap: price breaks BELOW the first-half low later in that candle, the breakdown finds no sellers, and a 5- or 15-minute bar closes back above both the first-half low and the midpoint. The sellers who chased that breakdown are now trapped — you buy the qualifying close (or rest a limit at the midpoint). The stop sits at the running low of the hour candle, which is naturally wide — roughly half the candle's range — so the trade sizes small and survives noise. First target is the opposite first-half extreme, then the standard exit menu. One signal per anchor candle, confirmed on the execution bar's close, nothing repaints because the first-half values are frozen. On ES the 60-minute half-range usually sits under the 12.5-point cost floor, so ES runs the 120/240-minute arms only. This is the only mined setup where every number came straight from working source code; it gets built ONCE together with its ported twin (the Candle Majick decomposition in the Ported Tools drawer). A companion CARRY arm (close above the first-half high with close-location ≥ 0.70 and a bullish VWAP regime) rides along. Before anything is believed, it must prove it is not just the live failed-breakout strategies wearing a different anchor.</p>
+    <span class="spec">entry: 5m/15m close &gt; fhL AND &gt; fhM after a break below fhL (or limit at fhM) · stop: running HTF-candle low · target: opposite first-half extreme → standard menu · params from source: continuationClosePct 0.70, vwapSlopeLen 5, vwapFlatTicks 2.0, one signal per HTF candle · anchors: 60/120/240m (ES: 120/240m only) · session: RTH exec bars · status: STAGE-1 — decorr check vs failed_breakdown, F08/F26/C1 at gate</span>
+
+    <h3>The morning after a hard down-trend day <span class="stag stg">STAGE-1</span> <span class="idm">M-01 · classifier → C052</span></h3>
+    <p>Yesterday was a strict trend day straight down — by the mechanical definition, price never re-crossed the session VWAP after 10:30 ET. Statistically those days almost never chain back-to-back: in twelve years the source counts exactly two back-to-back downside pairs on NQ and one on ES. The forced selling is spent. So the next morning you look for the first mechanical sign the sellers are done: after a new session low prints below the open, the first 5- or 15-minute close back above the prior bar's high is your buy trigger (a stricter arm waits until the open-to-low drop has already stretched at least half a daily ATR). Stop goes under the session low with a quarter-ATR buffer — wide on purpose, because the day after a trend day is a high-volatility day, and you size for that. Target is a resting limit at the session VWAP; an optional runner goes to VWAP plus one standard deviation. Entries 10:00–15:30 ET only, flat by the close. The rarity stat gets verified first on our own data — it costs nothing — and even if the trade arm dies, the trend-day classifier survives as a feature and as the kill-switch input.</p>
+    <span class="spec">condition: prior RTH day never re-crossed VWAP after 10:30 ET · entry: first 5m/15m close &gt; prior bar high after a new low below the open (arm B: only after open-to-low ≥ k×dailyATR, k ∈ {0.5, 0.75, 1.0}) · stop: session LOD − 0.25×ATR(5m) · target: resting limit at RTH VWAP (runner: VWAP+1σ) · session: RTH 10:00–15:30, EOD flat · status: STAGE-1 — b2b-rarity stat batch-verified first, free</span>
+
+    <h3>The inside bar after a stop run <span class="stag stg">STAGED</span> <span class="idm">M-02</span></h3>
+    <p>Price runs the stops through an obvious level — the day's low or high, the overnight extreme, or yesterday's — and closes back inside within a bar or three. The sweep failed. Now you wait for the market to coil: the first inside bar (a bar whose whole range sits inside the previous bar's) forming within a few bars of the sweep. You place a stop order just through that inside bar in the reclaim direction — above its high after a downside sweep, below its low after an upside sweep — and cancel it if nothing triggers within 2–4 bars. The stop goes beyond the sweep extreme with a quarter-ATR buffer: wide, honest, and exactly where the trade is proven wrong. Target is the prior session's point of control (once the profile build unblocks) or the next session level in your direction, with a proportional fallback. The sessions the source actually traded: the power hour (15:00–16:00 ET) after a midday sweep, plus an overnight variant that runs as its own arm. One caution stands: the live book already runs an inside-bar strategy, so this must prove it wins and loses on different days before promotion.</p>
+    <span class="spec">sweep: trade through marked level (LOD/HOD, ON H/L, prior-day H/L), close back inside within N ∈ {1,2,3} bars · setup: first inside bar within M ∈ {3..8} bars of sweep · entry: stop order at inside-bar high/low, cancel after 2–4 bars · stop: sweep extreme ± 0.25×ATR · target: prior-session POC (needs 1.11) or next level; proportional tp_r fallback · sessions: power hour after 12:00–13:30 sweep; ETH variant as arm · status: STAGED — decorr vs live inside_bar at gate</span>
+
+    <h3>Fade the outer VWAP band — balanced days only <span class="stag stg">STAGE-2</span> <span class="idm">M-06 · vs F03/C4</span></h3>
+    <p>First classify the day, then trade it. As long as price lives inside the VWAP bands the day is "in balance", and a rejection at the outer two-standard-deviation band — a wick beyond it with a close back inside — is a fade back toward VWAP. The moment two consecutive 5-minute bars CLOSE beyond that outer band, the day has flipped to "migrating": the market wants a new fair price, you cancel everything and stand down until price re-enters the inner band. Entries only 10:00–15:30 ET, skipping the opening half-hour while the bands are still forming. Stop beyond the rejection extreme, at minimum beyond the band plus a quarter-ATR. Target is VWAP itself, with the one-sigma band as a partial. The kill condition was agreed before the test: if its daily P&amp;L just mirrors the two live VWAP strategies, it dies — but the balance-or-migrating state read survives as a feature either way. Never trade the VWAP centerline itself; the plain band fade without the state machine is already rejected.</p>
+    <span class="spec">state: balance = price inside bands · migration kill: 2 consecutive 5m closes beyond 2σ → stand down until back inside 1σ · entry: 5m rejection bar at ±2σ (wick beyond, close inside; 1σ weak arm), fade toward VWAP · stop: beyond rejection extreme, min 2σ band + 0.25×ATR · target: VWAP (1σ partial) · session: 10:00–15:30 ET · status: STAGE-2 — pre-registered kill: collapse onto F03/C4 daily-R corr ⇒ dead; state feature survives</span>
+
+    <h3>Opening range measured in volume, not minutes <span class="stag stg">STAGE-2</span> <span class="idm">M-04 · scope shelf OPT-067</span></h3>
+    <p>Everyone freezes the opening range at a clock time; this version freezes it when enough BUSINESS has been done — the range locks at the first bar where cumulative session volume crosses a threshold. On a fast tape the range completes early and comes out narrower, giving earlier and cleaner breaks; on a slow day it auto-widens. After the freeze it is the standard opening-range break play: enter on a 5-minute close beyond the range, stop at the opposite extreme plus a buffer, proportional target off the range size. The community shipped the construction but never disclosed their entry, stop or target — those are set by the sweep; the volume thresholds run as arms at 25%, 40% and 60% of the trailing 20-day median first-hour volume. This is the one sanctioned experiment with volume-defined bars — extending the idea any further is a constitution change that needs an operator ruling.</p>
+    <span class="spec">range: OR H/L frozen at first bar where cum RTH volume ≥ V, V ∈ {25%, 40%, 60%} of 20d median first-hour volume · entry: 5m close beyond frozen range · stop: opposite range extreme + buffer, floor-skip · target: proportional tp_r × range · status: STAGE-2 — one-knob anchor swap on existing or_break machinery; entry/stop/target set by the sweep</span>
+
+    <h3>The 18:00 reopen and 15:00 opening ranges <span class="stag dn">UNBLOCKED · whitelist</span> <span class="idm">M-05 · DECISION-NEEDED</span></h3>
+    <p>Nobody in our corpus trades the 18:00 ET futures reopen at all — which makes any structure there decorrelated from the entire RTH book by construction. The play: draw the opening range off the first 5 minutes (10- and 15-minute arms) at the 18:00 reopen, and separately at 15:00 ET. When a 5-minute bar closes beyond the range, don't chase — rest a limit at the broken edge and wait for the retest tap, cancelling if it doesn't fill within 3–6 bars. Stop beyond the opposite boundary. The reopen ranges are often thin, so the cost law becomes the entry gate itself: skip any session where the range is under 20 NQ / 12.5 ES points. The community took profit at half the range — a fat-stop, thin-target shape that needs a very high win rate — so the sweep runs 50%, 100% and proportional target arms and judges on net dollar expectancy. The data trap that killed CCM-FVG was checked first: the default DEV data is overnight-blind (0–13% coverage), so this may ONLY run on the whitelisted 24-hour sources. Whether an overnight session belongs in the program at all is still the operator's call.</p>
+    <span class="spec">range: first 5m bar (arms 10/15m) at 18:00 ET reopen + separately 15:00 ET · trigger: 5m close beyond range (1m origin quarantined — killed TF) · entry: resting limit at broken edge, cancel 3–6 bars; VWAP-anchored limit arm · stop: beyond opposite boundary + buffer · min-range gate: skip if range &lt; 20 NQ / 12.5 ES pt · target arms: 50% / 100% / tp_r-proportional · data: whitelisted 24h sources ONLY (databento 1m 2016-2024 · nq_1min_from_ticks · ohlcv_5m_24h · HUD ≥2026-06); cache/ohlcv_5m/ + ohlcv_1m DEV = invalid by construction · status: coverage CHECK 2 PASS 07-11; overnight SCOPE = operator call</span>
+  </div>
+
+  <div class="bgroup"><div class="bt">Battery arms from the Discord digest — feed-to-sweep, run order re-ranked</div></div>
+  <div class="pbk">
+    <h3>The approach-velocity gate — runs first <span class="stag stg">STAGED · run 1st</span> <span class="idm">DM-02</span></h3>
+    <p>Not a new trade — a question asked of trades we already took. Replay the existing passive-limit fill logs and cancel, on paper, every entry where price was rushing into the level over the last three 1-minute bars ("would pull bids if we start to flash dump" — the live rule this mechanizes). If the fills you kept were meaningfully better than the ones a random-cancel placebo keeps at the same skip rate, the gate is real. Cheapest test in the package and the most information per hour; a 5-minute-computed sibling runs as an arm, and a second ablation checks fills with a fresh liquidity sweep behind them versus without.</p>
+    <span class="spec">form: pure ablation on existing passive-limit fills — no new trades, no cost exposure · gate: approach speed over last 3×1m bars (5m sibling arm) · control: random-cancel placebo at equal skip-rate · status: STAGED, runs FIRST</span>
+
+    <h3>The initial-balance extension fade <span class="stag stg">STAGED</span> <span class="idm">DM-04 → merged into expansion-D1</span></h3>
+    <p>When the first hour's range (the initial balance) gets extended far beyond itself, the move is usually stretched: enter the fade when price has run to 1.2× the IB extension (1.4× as a second arm), with the stop out at 1.75× — about 0.55 of the IB range, roughly 45–80 NQ points or 11–22 ES points, so NQ passes the cost floor easily and ES sits near it. The community's own numbers enrich the card: stops 15–20 NQ points beyond the pullback extreme ("not 10 — NQ needs room"), first target 25% retracement back into the range, a fade-quality prior ("the deeper it already ran, the more a pullback to the IB high is a top, not a re-entry"), and a VWAP+2σ gate. Built once with the D1 Dalton IB plays — the best geometry in the batch and literally the bet-#2 thesis.</p>
+    <span class="spec">entry: 1.2×IB-extension tag (1.4 arm) · stop: 1.75×ext ⇒ ≈0.55×IB-range ≈ 45–80 NQ pt / 11–22 ES pt (floors applied) · community rows: SL 15–20 NQ pt beyond pullback extreme · TP1 25% retrace into IB · VWAP+2σ gate · C-period close-outside-IB confirm · status: STAGED — one build with D1</span>
+
+    <h3>The prior-POC timeout inversion <span class="stag blk">BLOCKED · via B8</span> <span class="idm">DM-01</span></h3>
+    <p>Most mornings, price goes back and touches yesterday's point of control early. When the touch DOESN'T come by a deadline, that refusal is information — the market is accepting the new prices, and you trade the inversion. The stop is the opposite extreme of the 10:00–10:15 range, capped at 1.5 daily-ATR-scaled 5-minute ATRs, with the 12.5/20-point floors enforced explicitly. The timeout deadline itself isn't guessed — claim B4 in the verification queue derives it from data. The whole trade waits on the volume-profile rebuild: the B8 trap proved profiles built from 5-minute bars put the POC about 10 ES points off, so this is blocked until 1-minute inputs land. The card carries the standing caution: the base rates are real, but naive touch-monetization is dead — judge conditional expectancy against adverse excursion, not touch rates.</p>
+    <span class="spec">condition: prior-day POC untouched by timeout T (T from claim S6-B4) · stop: opposite extreme of 10:00–10:15 range, cap 1.5×ATR(5m), floors enforced · prerequisite: 1.11 profile build (1m range-uniform inputs — B8 gate) · status: BLOCKED behind B8; scheduled after 1.11</span>
+
+    <h3>The ES/NQ leader-laggard pairs sleeve <span class="stag stg">STAGED</span> <span class="idm">C010-B</span></h3>
+    <p>The one candidate in the whole package whose profits would not depend on market direction at all: at 12:00, read which of ES and NQ is leading, put the two legs on against each other, and go flat by the close, with a disaster stop if the spread blows out three standard deviations. Zero-beta means it diversifies the book by construction — the reason it earned a slot. The honest killer is stated up front: two legs means double the market costs (and micro contracts make the per-unit fees worse), so a 2× cost wall is expected. Its statistics stay blocked by the pairs trap until the accounting treats a pair as ONE trade, never two.</p>
+    <span class="spec">signal: 12:00 leader/laggard read · legs: ES vs NQ, EOD flat · disaster stop: spread +3σ · risk quantified vs the $2k floor · expected wall: 2× two-leg costs · status: STAGED — trap C8 (pairs-legs-are-not-trades) blocks its stats until wired</span>
+
+    <h3>The event-candle midpoint retest <span class="stag dn">DECISION-NEEDED</span> <span class="idm">DM-03</span></h3>
+    <p>After a scheduled release prints an impulse candle at least three times the pre-event ATR, the 50% midpoint of that candle becomes a level, and the retest of it is the trade. The stop is the impulse candle's opposite extreme — likely wide enough — but the true killer at event time is the spread blowing out, so the spec mandates 1-minute delayed fills and doubled costs in any test. Whether this runs at all is not our call: the event/calendar mechanism lane was closed with six honest NULLs, and the operator must rule whether release-bar level construction is a genuinely new mechanism class. The prerequisite feature (news-candle levels, 1.21) is staged either way; the statistics get verified regardless.</p>
+    <span class="spec">level: 50% midpoint of release impulse candle (≥3× pre-event ATR) · entry: retest of midpoint · stop: impulse-candle opposite extreme · mandatory: M1 delayed fills + doubled event-window costs · prerequisite: feature 1.21 · status: CONDITIONAL on operator adjudication of the event-lane 6-NULLs receipt; runs last of the accepted arms</span>
+  </div>
+
+  <div class="bgroup"><div class="bt">Param enrichment + standing pointers</div></div>
+  <div class="pbk">
+    <h3>Community parameter rows onto already-staged cards <span class="stag stg">STAGED · rows</span></h3>
+    <p>The mine also produced numbers the community actually traded with, loaded as parameter rows onto cards that already exist — the IB plays (D1/DM-04), the turtle-soup Donchian card (a 2-day-lookback arm entered on a close below the prior 2-day low, gated by a rising 50-day EMA), the POC timeout, the velocity gate, and the break-of-structure retest family. The best of it is four gate atoms for bos_retest — suppress entries after a lower-high, a proximity veto, a bar-body veto, and zone expiry — going onto X10–X13, four of our biggest-sample families which today carry zero condition atoms.</p>
+    <h3>The trigger-lab re-sweep is already running <span class="stag hot">ACTIVE</span></h3>
+    <p>The operator manages the sweep in a separate terminal out of <span class="num">results/trigger_lab_autonomous_2026_07_11/</span>. Everything above feeds it; Stage B corpus assembly waits on its results (PLAN §9).</p>
+    <h3>Twelve ideas the supplier rejected itself <span class="stag dead">KILLED-CLEAN</span></h3>
+    <p>The mine's own curator threw out twelve of its mechanisms before we ever saw them — a same-hour collision play, a CPI straddle, a 5-point-stop gamma bracket, the plain VWAP band fade without the state machine, and the rest. We checked the reasoning and endorsed every call; the receipts live in the Graveyard drawer.</p>
+  </div>
+
+  <details class="xp"><summary>original cards (expand) — preserved verbatim</summary>
   <div class="tree">
     <div class="bgroup"><div class="bt">The 5+1 staged mechanisms</div>
       <div class="opts">
@@ -590,6 +683,7 @@
       </div>
     </div>
   </div>
+  </details>
   <div class="note"><b>Law of this lane:</b> entry/stop/target specs must be one-sitting encodable · honest V5-C2 stop geometry · the cost floor is an eligibility filter (skip the trade), never the banned stop-widening denominator trick · decorrelation to the live book checked at gate.</div>
 </section>
 
@@ -597,6 +691,68 @@
 <section id="dh" class="drawer">
   <h2>Bug Traps — the quality control that catches fake edges (dest D · 30 checks · first 5 built 2026-07-11)</h2>
   <p class="lead">New surface: the machinery that makes every measured number trustworthy. Delivered in <span class="num">ltm/harness_traps/</span>: 6 test suites — <b>every check passes, and every bug we deliberately planted to prove the traps work was caught</b> (exact tallies: Archive drawer); wiring deferred to <span class="num">WIRING_TODO.md</span>; zero modifications to <span class="num">ltm/v5/</span> or the running sweep. Sources: <span class="num">TIER1_TRAPS_REPORT.md</span>, <span class="num">SUGGESTIONS_TRIAGE.md §5</span>.</p>
+
+  <div class="bgroup"><div class="bt">Tier 1 — built &amp; passing 2026-07-11 (78/78 checks · 24 planted bugs all caught)</div>
+    <p class="plainintro">Each trap is proven by a <span class="gl" title="plant a known bug on purpose and confirm the test catches it">positive control</span>: we deliberately planted the bug it hunts and confirmed the alarm rings.</p>
+    <div class="ledgerwrap tall"><table class="ledger plain">
+      <thead><tr><th>The bug it catches</th><th>What the trap does about it</th><th>Status</th><th>Caught so far</th></tr></thead>
+      <tbody>
+        <tr><td>Volume-profile levels (POC/VAH/VAL) computed from bars that are too coarse — the "point of control" you trade against isn't where the volume actually was <span class="idm">B8</span></td><td>An acceptance gate: builds the profile from 5-minute bars, compares it against a 1-minute reference on 22 real ES sessions from 2024, and refuses the build unless the POC lands within 8 ticks and the value area within 12 ticks on ≥90% of sessions (tolerances committed BEFORE seeing results). A code hook (<span class="num">vp_binning.assert_vp_build_allowed()</span>) physically blocks disallowed builds.</td><td>BUILT · gate ran honest FAIL</td><td><b>Caught:</b> EVERY 5m profile method fails — the standard close-binned method misses the true POC by a median 10 ES points (14% pass), and even the best 5m method (82%) misses the bar. All profile builds blocked until 1-minute inputs land; tick-level confirmation queued. Blocks 1.11 / DM-01 / D4.</td></tr>
+        <tr><td>The backtest fills you at prices the bar never traded, gives you a kind stop fill, or measures the bracket from the wrong price <span class="idm">C1+C2</span></td><td>Hard asserts on every simulated fill: fill price must be inside the bar's range, stop fills are never favorable, entries always happen on the NEXT bar's open, brackets are always measured from the actual fill. Signal timestamp pinned to the decision bar's CLOSE (the information-availability time). Directly encodes the scar from the 16 strategies killed by fantasy fills.</td><td>BUILT · 12/12 pass</td><td><b>Caught:</b> all 8 planted engine bugs, including the exact touch-bar-extreme fill that killed the 16 quarantined streams.</td></tr>
+        <tr><td>Wrong contract math — wrong dollars-per-point, clock changes shifting the session, a quarterly roll's +63-point price step read as a real move, trading through an early close <span class="idm">D5+D6</span></td><td>A contract-math lint plus two frozen "known-answer" calendar windows with hand-verified correct answers: a March 2024 week containing both the DST change and a contract roll, and Thanksgiving 2024 with its 13:15 early close. Any pipeline touching them must reproduce the pinned answers.</td><td>BUILT · 41/41 pass</td><td><b>Caught:</b> all 13 planted bugs (NQ priced at $5/pt, wrong multiplier, off-grid price, no-early-close, roll-step-as-gap, fixed-UTC session anchor, …).</td></tr>
+        <tr><td>A feature that quietly rewrites its own past once the future is known — looks prophetic in a backtest, is useless live <span class="idm">B7</span></td><td>Recomputes every feature with the future chopped off at several depths and asserts the values are bit-identical — turning "we believe nothing peeks ahead" into an automatic test across all 195+ features. Mandatory before the swing-structure and FVG ports land.</td><td>BUILT · 8/8 pass</td><td><b>Caught:</b> all 3 planted repainters (full-series z-score, centered moving average, retro-anchored pivot).</td></tr>
+        <tr><td>One market move counted as a hundred separate wins — overlapping fires inflating the trade count that all the statistics stand on <span class="idm">A1</span></td><td>Merges overlapping [entry, exit] windows into single episodes (per family and side) and asserts every headline N is an episode count, not a raw fire count. Must run inside the miner's scorer before any multiple-testing math.</td><td>BUILT · 11/11 pass</td><td><b>Caught:</b> raw-fire-count-as-N by the assert. Scale of the danger: one family has 127,939 raw events vs 5,302 real trades. The lab's actual trade streams measured clean (deflation ×1.00).</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="bgroup"><div class="bt">What the traps found when pointed at our existing code and data</div>
+    <div class="ledgerwrap tall"><table class="ledger plain">
+      <thead><tr><th>Finding</th><th>What it means</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>The monthly 1-minute cache (<span class="num">cache/ohlcv_1m/databento_YYYY_MM_1m.parquet</span>) is time-mislabeled <span class="idm">F1</span></td><td>Real bug: the timestamps are UTC+1 values wearing a New-York label, so the files contain NO regular-session data at all (true coverage ≈ 03:30–09:58 ET). Exposed by a "full RTH session" on Thanksgiving 2025 and bars after the 13:15 early-close halt. Quarantine/rebuild + consumer audit queued (WIRING_TODO #6). The fixture build is unaffected — it uses <span class="num">es_1min_databento_2016_2024.parquet</span>, cross-verified exact.</td><td>QUARANTINED</td></tr>
+        <tr><td>Real v4 streams + wired v5 condition families acquitted <span class="idm">F2/F5</span></td><td>Three real trade streams (C1, C4, F15) pass the fill invariants with zero violations, and the four wired condition families (weekly_ema21, day_type, ny_open_sweep, vix_regime) are bit-identical when the future is truncated.</td><td>CLEAN</td></tr>
+        <tr><td>Entry-price convention: 103 of 114 entries match exactly <span class="idm">F3</span></td><td>11 entries differ 0.25–2.25 pt against an independent bar source — consistent with the two frames coming from different data, not yet proven. Re-run on the lab's own frames after the sweep (WIRING_TODO #1).</td><td>OPEN</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="bgroup"><div class="bt">Tiers 2–4 + noted — staged, build in this order</div>
+    <div class="ledgerwrap tall"><table class="ledger plain">
+      <thead><tr><th>Tier</th><th>The bug it catches</th><th>What the trap does about it</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>2 · corpus prep</td><td>A corrupted or subtly wrong master dataset — gaps, bad resamples, levels silently wrong on roll days, timestamps in the wrong convention (the exact class that caught F1), settlement confused with the last trade, indicators read before their warm-up is done</td><td>Six checks that must pass before the 2016-2026 mining corpus is cut: integrity gate <span class="idm">B1</span> · continuity/resample <span class="idm">B2</span> · roll discipline — levels on unadjusted prices, returns on adjusted <span class="idm">B3</span> · timestamp-convention/DST asserts <span class="idm">B4</span> · settlement-vs-close pin <span class="idm">B5</span> · warm-up hygiene <span class="idm">B6</span></td><td>STAGED</td></tr>
+        <tr><td>3 · miner/engine</td><td>Rules that are secretly always-true, results that live on one lucky day, orders straddling the session boundary, costs computed on the wrong fee schedule (the cost law currently uses discount-broker rates, not prop-firm rates — quietly important), replays that differ run to run, a pair counted as two trades</td><td>Degenerate-condition lint <span class="idm">A2</span> · plateau + spec-jitter arm <span class="idm">A3</span> · rule round-trip identity <span class="idm">A4</span> · PnL-concentration screen <span class="idm">A5</span> · daily-equity metric basis <span class="idm">A6</span> · session-boundary order hygiene <span class="idm">C3</span> · state-dependent slippage + prop-rail fee table <span class="idm">C4</span> · replay determinism <span class="idm">C5</span> · double-entry reconciliation <span class="idm">C6</span> · ES-NQ stale-state assert <span class="idm">C7</span> · pairs-legs-are-not-trades <span class="idm">C8</span></td><td>STAGED</td></tr>
+        <tr><td>4 · bet #3</td><td>Account-simulator math that mis-measures drawdown or assumes actions a prop firm doesn't allow</td><td>DD-basis unit test <span class="idm">D1</span> · firm action-space table <span class="idm">D2</span> · copy-fidelity/common-mode scenario <span class="idm">D3</span> · block-bootstrap drawdown <span class="idm">D4</span></td><td>STAGED</td></tr>
+        <tr><td>noted</td><td>Scenario knobs and policy lines rather than tests</td><td>E1–E8 accepted as noted: delta-feed provenance <span class="idm">E5</span> is a hard prerequisite of feature C17 · the weekly shadow-parity replay <span class="idm">E6</span> goes into the SHADOW-READY definition-of-done</td><td>NOTED</td></tr>
+        <tr><td>digest</td><td>Process holes: features silently differing between training and live, results that hinge on the exact clock minute, costs leaking into entry counts, prop rules drifting, multi-condition rules with freeloading conditions</td><td>6 hardenings: feature-manifest assertion at train AND inference · phase-jitter arm (±15m/±1 bar) · slippage-eligibility audit (costs affect PnL only, never entry counts) · prop-rule adversarial-drift scenarios · marginal-contribution + sample floors for multi-condition rules · walk-forward boundary-position policy</td><td>STAGED</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="bgroup"><div class="bt">Adopted statistical upgrades (from the 2026-07-11 217-option review — plain-English detail in the Adopted Gaps drawer)</div>
+    <div class="ledgerwrap tall"><table class="ledger plain">
+      <thead><tr><th>The failure it guards against</th><th>What it adds</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Killing a real edge because the sample was simply too small to see it — shipping a premature negative</td><td>Power / minimum-detectable-effect analysis on every card; when the sample cannot resolve the claimed edge the verdict is INCONCLUSIVE, never KILL <span class="idm">OPT-126</span></td><td>ADOPTED-GAP #1</td></tr>
+        <tr><td>Declaring forecast A "better" than forecast B by eyeball</td><td>A proper forecast-comparison test suite (Diebold-Mariano, Giacomini-White, Clark-West for nested models, Pesaran-Timmermann) for the claims queue and the bet-#3 volatility forecasts <span class="idm">OPT-114</span></td><td>ADOPTED-GAP</td></tr>
+        <tr><td>Beating a strawman — every idea needs named opponents</td><td>An enumerated baseline battery predeclared per card: random-walk/no-change, do-nothing, incumbent policy, cost-free-vs-cost-aware <span class="idm">OPT-113</span></td><td>PARTIAL residue</td></tr>
+        <tr><td>A headline Sharpe that is really just the prize for searching hard enough</td><td>Deflated Sharpe Ratio + Probability-of-Backtest-Overfitting reported as cheap add-on stats on anything that survives <span class="idm">OPT-115</span></td><td>PARTIAL residue</td></tr>
+        <tr><td>Forgetting how many things were tried — the denominator of every "significant" result</td><td>ONE immutable global trial ledger across all five bets, including seeds and abandoned runs; every LLM prompt/branch/rejection logged into the same ledger <span class="idm">OPT-116 + OPT-106</span></td><td>PARTIAL residue</td></tr>
+        <tr><td>Policy A-vs-B comparisons where the difference is really just different random luck</td><td>Common-random-numbers matched replay discipline in the bet-#3 simulator <span class="idm">OPT-127</span></td><td>PARTIAL residue</td></tr>
+        <tr><td>Fills that look fine on price but are systematically poisoned — you only get filled when you're about to be wrong</td><td>Post-fill markout/toxicity measured at fixed horizons, turning shadow/paper parity into an adverse-selection detector; extends E6 in the SHADOW-READY definition-of-done <span class="idm">OPT-053</span></td><td>ADOPTED-GAP</td></tr>
+        <tr><td>An LLM "predicting" history it already read during training</td><td>A contamination protocol — pinned weights/prompts/tools, point-in-time retrieval rebuild, future-event probes, renamed entities/shifted dates/masked numbers; precondition for the planned LLM stage. Prompt-hiding does NOT fix look-ahead (OPT-176) <span class="idm">OPT-138</span></td><td>ADOPTED-GAP · precondition</td></tr>
+        <tr><td>A frozen model quietly going stale — alpha decays in ~12 months and the plan freezes one config with no aging policy</td><td>A temporal-decay / refit-policy study: train-once signal aging vs rolling/expanding refits, run as a post-survivor robustness read (PLAN §8) <span class="idm">OPT-202 = XS-12</span></td><td>ADOPTED-GAP</td></tr>
+        <tr><td>A survivor feature that only works because of a confounder</td><td>Double/debiased-ML stability probes as nuisance controls — explicitly NOT causal proof, NOT invariance training (the IRM variant stays dead per REC §8.4) <span class="idm">OPT-098</span></td><td>ADOPTED-GAP · probe</td></tr>
+        <tr><td>Passive entries whose fill odds are fantasy</td><td>A fill-survival model (competing risks: filled / cancelled / adverse move) built from OUR OWN shadow/live fill logs — never the banned book data; only matters if passive entries are ever used; pairs with the port-C7 queue haircut <span class="idm">OPT-088 = OPT-181</span></td><td>ADOPTED-GAP · COND</td></tr>
+        <tr><td>A student model inheriting future knowledge from a hindsight teacher</td><td>An oracle-distillation leakage audit rule: if any teacher-student setup ever appears, the student must not inherit future-trajectory information from a retrospective teacher; zero cost now, blocks a known leak class <span class="idm">OPT-189 = MICRO-11</span></td><td>ADOPTED-GAP · rule</td></tr>
+        <tr><td>Look-ahead sneaking in through text or revised economic data; misreading why an edge pays</td><td>Three doctrine lines: point-in-time language models are the only valid historical-text route <span class="idm">OPT-026</span> · ALFRED macro vintages, never revised FRED <span class="idm">OPT-068</span> · a mispricing-vs-compensated-risk interpretation field in survivor reporting (changes decay/crowding expectations) <span class="idm">OPT-033</span></td><td>ADOPTED-GAP · doctrine</td></tr>
+        <tr><td>Adopted claims of unequal quality treated as equal; artifacts silently swapped; sloppy intake of the next research package; conditional policies built on volatility mirages; edges that flip sign across states; simulators graded on charm</td><td>Six report-and-process fields: an A/B/C/D/X evidence tier on every adopted claim <span class="idm">OPT-107</span> · content hashes + model cards on label/normalizer/model/cost/fill artifacts <span class="idm">OPT-142</span> · the four reading questions as a standing intake checklist + CARD-E vs REC-E namespace discipline <span class="idm">OPT-144</span> · a volatility-tercile behavior report before ANY conditional policy <span class="idm">OPT-133</span> · a sign-flip-across-states report line with multiplicity correction <span class="idm">OPT-047</span> · reality-gap metrics that must PREDICT shadow reconciliation, not just report it <span class="idm">OPT-187</span></td><td>PARTIAL residue</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <details class="xp"><summary>original cards (expand) — preserved verbatim</summary>
   <div class="tree">
     <div class="bgroup"><div class="bt">Tier 1 — BUILT 07-11 (protects staged builds + every measured number)</div>
       <div class="opts">
@@ -642,6 +798,7 @@
       </div>
     </div>
   </div>
+  </details>
   <div class="note"><b>Sequencing law:</b> Tier-1 traps + the B8/B7 gates land BEFORE the 1.11 profile build and the bet-#1 miner scoring respectively. Spec pins are committed before results (B8 tolerances, C2 signal_ts = decision-bar close, A1 overlap = trade windows, real-stream checks on dev bucket ≤2025-10-01 only).</div>
 </section>
 
@@ -649,6 +806,23 @@
 <section id="dc" class="drawer">
   <h2>Claims To Verify — fact-checking mined claims on our own data (dest F · 37 items, priority-ordered)</h2>
   <p class="lead">New surface: 35 S6 claims + 2 T1 claims queued for batch verification on OUR data (vendor numbers never trusted; each claim is a prior attached to a specific card). Standing custody: <b>definitions pinned before the batch · selection statistics end 2026-03-31 · FDR-within-group.</b> T2-1..11 logged only (T2-5/T2-6 dig-worthy if idle); T3/T4 = documentation-only.</p>
+
+  <p class="plainintro">In priority order — every claim below is somebody else's number until it survives on our own 2016-2026 data.</p>
+  <ol class="queue">
+    <li><b>Does a level get stronger or weaker with each touch?</b> The answer decides whether "more touches" ADDS to or SUBTRACTS from the shipped defended-level score, and settles the related ported-tool question — either result changes a live feature. <b>⚠ Queued for the operator's eyes:</b> the result may contradict his own "more touches = more significance" doctrine. <span class="idm">A12 / X8</span> <span class="stag hot">PRI 1 · ⚠ operator</span></li>
+    <li><b>How far do initial-balance extensions actually run, and does the edge decay with how long the break took?</b> Supplies the entry/target priors and a minutes-to-break gate for the top battery arm (the IB extension fade, D1/DM-04). Vendor stats over 12 years — re-derived here. <span class="idm">A1</span> <span class="stag stg">PRI 2</span></li>
+    <li><b>How often do the stop and the target get hit inside the SAME bar?</b> That ambiguity rate calibrates the fill emulation — which changes every measured number in every bet. The vendor tested EUR/USD 1-minute data; we re-derive on ours (1m-for-fills is inside the plan's carve-out). <span class="idm">A10</span> <span class="stag stg">PRI 3</span></li>
+    <li><b>How rare are trend days, and do ES and NQ print them together?</b> The base rate underwrites the trend-day kill-switch (C052) and is the build-priority test for the whole ES-NQ-state feature class. <span class="idm">A3 + A4</span> <span class="stag stg">PRI 4</span></li>
+    <li><b>Does where price closed versus yesterday's point of control predict the next day's break — and does the 80% value-area rule hold?</b> First payoff tests of the profile build (1.11), currently blocked with it on the B8 verdict; the third leg (B4) derives the POC-timeout parameter that DM-01 needs from data. <span class="idm">A5 · A6 · B4</span> <span class="stag blk">PRI 5 · post-1.11</span></li>
+    <li><b>Four session-behavior stats:</b> how often the day stays inside its expected standard-deviation envelope (sizing envelopes for bet #3) · whether the Asia session really runs one-directional (a pre-open bias feature) · how often the day's high is already in by 15:00 (a survival-curve session clock) · the London-midpoint behavior. The London bracket arm carries a fat stated adverse-excursion tail — feature first, mechanism later. <span class="idm">A7 · A8 · A9 · A2</span> <span class="stag stg">PRI 6</span></li>
+    <li><b>Seven cheaper conditioning stats:</b> does IB size flip the regime read · what happens after a gap fills · is there a trend-day precursor signature · the delta-correlation go/no-go that decides whether the C17 backfill is worth it (B5) · intraday excursion envelopes (B6/B7) · the overnight-escape stat · B11–B13. B11 is vendor self-promo — order-of-magnitude read only. <span class="idm">A11 · B1 · B3 · B5 · B6/B7 · B10 · B11–B13</span> <span class="stag stg">PRI 7</span></li>
+    <li><b>Three event-day stats (FOMC rotation, CPI geometry, December afternoons)</b> — verified as STATS only; adopting any mechanism from them sits against the event-lane six-honest-NULLs receipt and needs the same operator adjudication as DM-03. <span class="idm">B2 · B9 · B8</span> <span class="stag dn">PRI 8 · adjudicate</span></li>
+    <li><b>The C-batch of ten cheap claims</b> — run together, corrected for multiple testing (<span class="gl" title="false-discovery-rate control: when you test many ideas at once, some pass by luck — this math keeps the lucky imposters out">FDR</span>); no card hinges on any of them, and the supplier itself flags C4/C10 as near-certain noise or debunked-family cousins. <span class="idm">C1–C10</span> <span class="stag stg">PRI 9</span></li>
+    <li><b>Does a balance/discovery day-type gate (IB width + VWAP stretch terciles) condition the IB card?</b> The only independent, loss-disclosing lead in 600 records; built on existing inputs. Point-in-time tercile cuts are mandatory — the supplier itself flagged the look-ahead. <span class="idm">T1-1</span> <span class="stag stg">PRI 10</span></li>
+    <li><b>How often do single-print profile levels get filled at D+5/D+10?</b> A new profile sub-object and a target-selection prior; vendor self-promo, runs only after 1.11 unblocks. <span class="idm">T1-2</span> <span class="stag blk">PRI 11 · post-1.11</span></li>
+  </ol>
+
+  <details class="xp"><summary>original cards (expand) — preserved verbatim</summary>
   <div class="tree"><div class="bgroup"><div class="bt">Run order (by decision-relevance to the five bets)</div>
     <div class="opts">
       <div class="opt hot"><span class="tag">PRI 1 · ⚠ operator</span><b>Does a level get stronger or weaker with each touch? <span class="num" style="color:var(--muted);font-size:10.5px">A12</span></b><span class="d">the answer decides whether "more touches" ADDS to or SUBTRACTS from the defended-level score, and settles the related port question — either result changes a shipped feature, and it may contradict the operator's own "more touches = more significance" doctrine (queued for his eyes) <span class="num" style="color:var(--muted);font-size:10.5px">[X8]</span></span></div>
@@ -664,6 +838,7 @@
       <div class="opt blocked"><span class="tag">PRI 11 · post-1.11</span><b>T1-2 single-print fill rates</b><span class="d">new profile sub-object + target-selection prior; batch-verify at D+5/D+10; vendor self-promo — run after 1.11 unblocks</span></div>
     </div>
   </div></div>
+  </details>
   <div class="note"><b>Count check:</b> Pri 1–4 = 5 claims · Pri 5 = 3 · Pri 6 = 4 · Pri 7 = 10 · Pri 8 = 3 · Pri 9 = 10 · T1 = 2 → <span class="num">37 queued</span>. New adopted gap OPT-019 (curve/basis family) adds one more verify when its features land.</div>
 </section>
 
@@ -671,6 +846,54 @@
 <section id="dp" class="drawer">
   <h2>Ported Tools — utilities rebuilt from mined trading code (dest E · 21 staged)</h2>
   <p class="lead">New surface: sub-component decompositions of mined indicator/script sources into features, primitives, sweep arms, and harness logic. Adjudication of record: brief rule 5 supersedes the digest's "parked as HYDRA-live-book" stance — ports stay at the SHADOW-READY ceiling, <b>no HYDRA wiring</b>, PineForge execution route rejected (operator confirm item).</p>
+
+  <div class="bgroup"><div class="bt">Calendar &amp; session</div>
+    <ul class="inv">
+      <li><b>Exchange holiday calendar</b> — an offline-generated table of every CME holiday and early close, consumed by the test harness; today our early-close handling is ad hoc. Feeds the session-boundary trap (C3). <span class="idm">C6</span> <span class="stag stg">STAGE-1</span></li>
+      <li><b>Cash-hours vs full-session VWAP spread</b> — one genuinely unlogged feature (the gap between the two VWAPs), plus a rule that VWAP is always built from 1-minute inputs — a prophylactic against a silent averaging bug. <span class="idm">A6</span> <span class="stag stg">STAGED</span></li>
+      <li><b>Time-of-day extreme hazard</b> — at what clock time the day's high and low tend to print, as a frequency map. <span class="idm">B5</span> <span class="stag stg">STAGED</span></li>
+    </ul>
+  </div>
+
+  <div class="bgroup"><div class="bt">Levels &amp; zones</div>
+    <ul class="inv">
+      <li><b>The full life of an inverted fair-value gap</b> — tracks an <span class="gl" title="a three-bar gap where price moved so fast it left an untraded window">FVG</span> from birth, through inversion (a body-close through it flips it into a level), to death (invalidated with a 50-tick buffer — a lifetime rule worth testing on ALL level types), plus a running ledger of which old highs and lows have already been swept. Full source on disk; one sitting to build. <span class="idm">A1 IFVG · extends 1.22/1.8/1.9</span> <span class="stag stg">STAGE-1</span></li>
+      <li><b>Nick's initial-balance gates</b> — failure-filter gates for the IB break → extension → retest sequence; the parameter donor for the top battery arm (D1/DM-04). <span class="idm">C1</span> <span class="stag stg">STAGED</span></li>
+      <li><b>Candle Majick decomposition</b> — the first-half "battlefield" levels plus the TRAP/CARRY and ABSORB/ROTATE states; ONE build together with setup M-03. The script's hand-tuned score weights were dropped — the right call, no validation was ever shown for them. <span class="idm">A3 · = M-03</span> <span class="stag stg">STAGED</span></li>
+      <li><b>Structure-state veto stack + diamond retest</b> — booleans that suppress entries when the market structure argues against them, plus a retest level drawn at the pivot bar's body edge. Its exit logic is EXCLUDED (closed question); percent thresholds re-scaled by ATR. <span class="idm">A4 MSP</span> <span class="stag stg">STAGED</span></li>
+      <li><b>Sweep &amp; retest grammar</b> — parameterized sweep states <span class="idm">B3</span> · the sweep-and-fail trigger, whose whole game is a confirmed-swing ledger plus a confirmation-lag rule <span class="idm">B4 SFP</span> · retest-quality features <span class="idm">B7</span>. <span class="stag stg">STAGED</span></li>
+      <li><b>Volume-shelf detection</b> — finds the high- and low-volume nodes (busy shelves vs thin air pockets) in the profile; waits behind the B8 profile gate. <span class="idm">B6</span> <span class="stag stg">STAGED · behind B8</span></li>
+      <li><b>Settlement level + expected-move bands</b> — the prior settlement price as a magnet level (needs the settlement-vs-close pin, trap B5) and expected-move bands computed from the prior day's option-implied volatility. <span class="idm">C2 · C3</span> <span class="stag stg">STAGED</span></li>
+      <li><b>IB-break parameter rows</b> — A/B parameter sets loaded onto the D1/DM-04 card. <span class="idm">B2</span> <span class="stag stg">STAGED · rows</span></li>
+    </ul>
+  </div>
+
+  <div class="bgroup"><div class="bt">Fills &amp; execution honesty</div>
+    <ul class="inv">
+      <li><b>Queue-aware fill rules</b> — a passive limit order only counts as filled if price traded THROUGH it, with an optional volume-based queue haircut and pessimistic same-bar handling; bar data only, no order-book data. Pairs with the fill-engine traps C1/C2. <span class="idm">C7</span> <span class="stag stg">STAGE-1</span></li>
+      <li><b>Costed-strategy template</b> — an honest-cost parity configuration for checking TradingView-sourced claims (its own stop fails our cost law — the supplier says so itself). <span class="idm">A5</span> <span class="stag park">REFERENCE only</span></li>
+    </ul>
+  </div>
+
+  <div class="bgroup"><div class="bt">Orderflow</div>
+    <ul class="inv">
+      <li><b>Volume-spread + manipulation-state toolkit</b> — flags bars where huge volume produced almost no range (someone absorbing everything thrown at them), a 4-state read on whether the tape looks manipulated, and the panic sweep-reclaim detector (same build as the staged feature C13 — build once). Its fake buy/sell-pressure sub-part stays quarantined until real delta data lands. <span class="idm">A2 USR V9 · A2c ≡ C13</span> <span class="stag stg">STAGED</span></li>
+      <li><b>Standardized CVD spec</b> — the delta normalization formulas, waiting on the C17 aggressor-flag backfill. <span class="idm">B9</span> <span class="stag dn">CONDITIONAL</span></li>
+    </ul>
+  </div>
+
+  <div class="bgroup"><div class="bt">Stats &amp; reference</div>
+    <ul class="inv">
+      <li><b>MACD-V + volatility estimators</b> — an ATR-normalized MACD <span class="idm">C5</span>, and the textbook volatility estimators plus the autocorrelation-corrected Sharpe (merged with the staged S8 feature — same formulas suggested twice) <span class="idm">C8 ≡ S1-S8</span>. <span class="stag stg">STAGED</span></li>
+      <li><b>TradingStats study checklist</b> — 12 base-rate study specs to replicate on our own data; the vendor's numbers are never trusted. <span class="idm">C9</span> <span class="stag stg">STAGE-2</span></li>
+      <li><b>SMT divergence kernel</b> — a reference implementation for the already-planned ES/NQ divergence features (1.5/1.6); admitted not-new. <span class="idm">C4</span> <span class="stag park">REFERENCE only</span></li>
+      <li><b>Gap-fill breakout params</b> — held as a cross-check only; the gap family is settled (79.4%). <span class="idm">B8</span> <span class="stag park">LOW</span></li>
+      <li><b>NR4/NR7 with breakouts</b> — a dedupe miss by the supplier: the compression flags already exist in the 195 features (is_nr4/is_nr7, range_compression_4d/7d); only the days-since-compression counter and the target mechanics survive, as parameter rows. <span class="idm">B1</span> <span class="stag dead">PARTIAL-REJECT</span></li>
+      <li><b>The eight repaint exclusions</b> — kernel regression, retro-anchored and assumed pivots, auto trendlines, projection cones, mutating ICT zones: all verified per row as indicators that redraw their own past, all ENDORSED as exclusions. Do not re-propose. <span class="idm">X1–X8</span> <span class="stag dead">KILLED-CLEAN</span></li>
+    </ul>
+  </div>
+
+  <details class="xp"><summary>original cards (expand) — preserved verbatim</summary>
   <div class="tree">
     <div class="bgroup"><div class="bt">Stage-1 (highest reliability per hour)</div>
       <div class="opts">
@@ -702,6 +925,7 @@
       </div>
     </div>
   </div>
+  </details>
   <div class="note"><b>Count:</b> 21 staged (3 STAGE-1) + 2 reference-only + 1 conditional + 1 low + 1 partial-reject; X1–X8 exclusions endorsed.</div>
 </section>
 
@@ -709,8 +933,39 @@
 <section id="dg" class="drawer">
   <h2>Adopted Gaps (2026-07-11) + the full 217-option classification ledger</h2>
   <p class="lead">On 2026-07-11 every research option surfaced by the ML/AI review package (<span class="num">RESEARCH_OPTION_INVENTORY_2026_07_11.md</span>, OPT-001…217) was classified against the plan (<span class="num">GAP_ANALYSIS_2026_07_11.md</span>): <b>COVERED 56 · GAP 24 · PARTIAL 44 · JUDGMENT-CALL 39 · CORRECTLY-EXCLUDED 54</b>. The 24 gaps were adopted (18 distinct after merging Section-6 duplicates — almost all Small effort, mostly harness/doctrine lines). Custody: this classification proposes board changes only; every adoption still goes through the normal card + operator-checkpoint process.</p>
+
+  <div class="bgroup"><div class="bt">The 18 distinct adopted gaps, in plain English (grouped by what they do)</div></div>
+  <div class="pbk">
+    <h3>Referee upgrades — making the judging harder to fool <span class="stag gap">7 gaps</span></h3>
+    <p><b>Never ship a premature negative, enforced by math</b> <span class="idm">OPT-126</span>. Before any test runs we compute whether the sample is even big enough to see the claimed edge; when it isn't, the verdict is INCONCLUSIVE — not KILL. This protects real edges from dying to small samples, the single failure mode the operator has been vindicated on repeatedly.</p>
+    <p><b>Proper referee tests for "is forecast A better than B"</b> <span class="idm">OPT-114</span>. Named statistical tests (Diebold-Mariano and friends) replace eyeballing when two forecasts or models are compared — used by the claims queue and the bet-#3 volatility forecasts.</p>
+    <p><b>Anti-luck statistics on every headline survivor</b> <span class="idm">OPT-115</span>. Anything that survives gets a Deflated Sharpe Ratio and a probability-of-backtest-overfitting number attached — cheap stats that ask "is this just the prize for searching hard enough?".</p>
+    <p><b>Named opponents, declared in advance</b> <span class="idm">OPT-113</span>. Every card pre-declares the dumb baselines it must beat — do-nothing, no-change, the incumbent policy, the cost-free version — so nothing wins by beating a strawman chosen after the fact.</p>
+    <p><b>One immutable count of everything we ever tried</b> <span class="idm">OPT-116 + OPT-106</span>. A single global trial ledger across all five bets, including random seeds, abandoned runs and every LLM prompt and rejection — because "significant" means nothing without the true denominator of attempts.</p>
+    <p><b>Matched-luck replays for policy comparisons</b> <span class="idm">OPT-127</span>. When account-policy A is compared to policy B in the simulator, both face the exact same random draws, so the difference is the policy — not the dice.</p>
+    <p><b>Stability probes on survivor features</b> <span class="idm">OPT-098</span>. A nuisance-control read (double/debiased-ML) that asks whether a surviving feature still matters once confounders are controlled — explicitly a robustness probe, not causal proof.</p>
+    <h3>New features — measurement the model doesn't have yet <span class="stag gap">4 gaps</span></h3>
+    <p><b>Candle-range relationship states</b> <span class="idm">OPT-044 CRT</span>. A small fixed vocabulary of how the current bar's range relates to the prior one — adjacent to two staged features but not identical; a cheap categorical family for the Stage-B corpus.</p>
+    <p><b>The futures curve itself as context</b> <span class="idm">OPT-019 = 059/216</span>. Slope, carry, basis convergence, roll yield and open-interest migration computed from the raw dated ES/NQ contracts with causal rolls — a genuinely absent, own-instrument context family; the roll-discipline trap (B3) builds half the plumbing. Adds one claims-queue verify when it lands.</p>
+    <p><b>Intrabar path shape</b> <span class="idm">OPT-066</span>. Mathematical summaries of HOW price traveled inside the bar (path signatures), admitted only if they beat cheap handcrafted path stats under identical folds.</p>
+    <p><b>How one-sided the tape's order flow runs</b> <span class="idm">OPT-052</span>. Trade-sign persistence and run-length features — do buyers keep hitting in streaks? — riding the same aggressor-flag backfill as the C17 delta block at near-zero extra cost.</p>
+    <h3>New experiments — models and training regimes <span class="stag gap">3 gaps</span></h3>
+    <p><b>A second opinion on the champion model</b> <span class="idm">OPT-097</span>. TabPFN — a model built specifically for small tabular datasets — benchmarked against CatBoost under identical point-in-time folds; it earns a seat only by beating the champion fairly.</p>
+    <p><b>Synthetic data, fenced to training only</b> <span class="idm">OPT-093 + 139/208</span>. Augmenting TRAINING folds with generated data plus stress scenarios for the bet-#3 simulator — under the hard rule that synthetic rows never appear in validation or test sets.</p>
+    <p><b>How fast does a frozen model go stale?</b> <span class="idm">OPT-202 = XS-12</span>. Alpha decays in about a year (house prior), yet the plan freezes one configuration with no aging policy. This study measures train-once signal aging against rolling and expanding refits, as a post-survivor robustness read.</p>
+    <h3>Execution &amp; ops — protecting the money path <span class="stag gap">4 gaps</span></h3>
+    <p><b>Are our fills poisoned?</b> <span class="idm">OPT-053</span>. Measure what price does at fixed horizons AFTER each fill. If the market systematically moves against us right after we get filled, the fills are adversely selected even when the price looked fine — this turns shadow/paper parity into an adverse-selection detector.</p>
+    <p><b>Net the sleeves before the exchange sees them</b> <span class="idm">OPT-008 = 194</span>. When multiple sleeves fire opposing orders at the same moment, net them internally first — fewer contracts traded, less cost, same exposure.</p>
+    <p><b>Honest odds for passive orders</b> <span class="idm">OPT-088 = 181</span>. A competing-risks model of whether a resting order gets filled, cancelled, or run over — built from OUR OWN shadow and live fill logs, never the banned book data; only matters if passive entries are ever used.</p>
+    <p><b>An LLM exam it can't have memorized</b> <span class="idm">OPT-138</span>. Before any LLM stage runs on historical data: pinned weights and prompts, point-in-time retrieval, future-event probes, and renamed-entity/shifted-date tests — because a model that already read history isn't predicting it. Telling it to "pretend it's 2008" fixes nothing.</p>
+    <p><b>No hindsight teachers</b> <span class="idm">OPT-189</span>. If a teacher-student model setup ever appears, the student must be audited for inheriting the teacher's knowledge of the future. Costs nothing now; blocks a known leak class.</p>
+    <h3>Doctrine lines — one-sentence laws added to the causality contract <span class="stag gap">3 gaps (+6 report-field residues)</span></h3>
+    <p><b>Historical text only through point-in-time language models</b> <span class="idm">OPT-026</span> · <b>macro data only as originally released (ALFRED vintages), never as later revised</b> <span class="idm">OPT-068</span> · <b>every survivor's report must say WHY it thinks the edge pays</b> — mispricing or compensated risk — because the answer changes how fast it should decay and how crowded it will get <span class="idm">OPT-033</span>. Six further report-field residues (evidence tiers, artifact hashes, intake checklist, volatility-tercile precondition, sign-flip scan, reality-gap scorecard) are detailed in the Bug Traps drawer's adopted-upgrades table.</p>
+  </div>
+
   <div class="tree">
     <div class="bgroup"><div class="bt">The 24 adopted gaps (ranked: decision-relevance × cheapness; duplicate IDs merged)</div>
+      <p class="plainintro">The same adoptions as above, one line each with destination and effort — S = small, M = medium.</p>
       <div class="ledgerwrap"><table class="ledger">
         <thead><tr><th>#</th><th>OPT</th><th>What it is (one line)</th><th>Destination surface</th><th>Effort</th></tr></thead>
         <tbody>
@@ -737,6 +992,7 @@
       <p class="hint">Duplicate IDs counted inside the 24-gap bucket: OPT-059 and OPT-216 (= row 6), OPT-194 (= row 10), OPT-181 (= row 11), OPT-139 and OPT-208 (= row 14).</p>
     </div>
     <div class="bgroup"><div class="bt">COVERED — 56 options already fully in the plan (OPT → PLN reference map)</div>
+      <p class="plainintro">These 56 research options need no action — the plan already contains each one; the right-hand column shows exactly where.</p>
       <div class="ledgerwrap"><table class="ledger">
         <thead><tr><th>OPT</th><th>Option</th><th>Covered by</th></tr></thead>
         <tbody>
@@ -800,6 +1056,7 @@
       </table></div>
     </div>
     <div class="bgroup"><div class="bt">PARTIAL — 44 options where the plan covers a narrower version (residue stated; duplicates in parentheses)</div>
+      <p class="plainintro">Here the plan covers part of the idea; the last column states exactly what remains uncovered and under what condition the residue would be adopted.</p>
       <div class="ledgerwrap"><table class="ledger">
         <thead><tr><th>OPT</th><th>Option</th><th>Covered by</th><th>Uncovered residue</th></tr></thead>
         <tbody>
@@ -845,6 +1102,10 @@
   <p class="lead"><b>These are NOT candidates and must not be built speculatively.</b> Each is alive in the literature but sits on a tension only the operator can resolve — almost all one tension: universe expansion beyond ES/NQ (prime directive + LPC §3 require explicit opt-in), plus a handful of killed-lane-adjacent designs where "genuinely new mechanism class" is arguable. Every reopen also requires an explicit falsifier + clean custody + full trial accounting (LPC §4).</p>
   <div class="tree">
     <div class="bgroup"><div class="bt">Universe expansion — needs an explicit ES/NQ-scope opt-in (29)</div>
+      <div class="pbk" style="margin-bottom:10px">
+        <h3 style="margin-top:4px">Should this program trade anything other than ES and NQ?</h3>
+        <p>That single question decides all 29 options below in one stroke. Each is alive in the literature — stock ranking, FX, crypto, options, bonds, news text, satellite data — but the prime directive says ES/NQ only unless you explicitly opt in, and most also need data feeds we would have to buy. Until you rule otherwise, every row stays on the shelf: nothing here may be built, prototyped, or "just explored". The table lists each option and its specific version of the tension.</p>
+      </div>
       <div class="ledgerwrap"><table class="ledger">
         <thead><tr><th>OPT</th><th>Option</th><th>Stated tension</th></tr></thead>
         <tbody>
@@ -881,6 +1142,37 @@
       </table></div>
     </div>
     <div class="bgroup"><div class="bt">Killed-lane-adjacent — needs a "genuinely new mechanism class" ruling (8)</div>
+      <p class="plainintro">Each of these sits next to a grave. A lane you killed stays killed unless you personally rule the new proposal a genuinely different animal — so each is phrased as the question you would actually have to answer.</p>
+      <ol class="dsheet">
+        <li><b>Should "learn the chart's patterns first, per training fold" count as different from the killed Kronos lane?</b> Pre-trained chart embeddings failed 16 of 16 variants and the lane is closed — but these proposals pre-train INSIDE each training fold instead of importing a frozen outside model, which is arguably a different class. Reopening still requires your sign-off plus a pre-committed falsifier. <span class="idm">OPT-015 = 090 = 197/XS-7 = 206/TS-4 · LPC #2/§4</span></li>
+        <li><b>Should the multi-level "which level gets touched first" label be ruled a new mechanism class?</b> The original first-touch label was overturned for contamination (PLN-139); the structural multi-level framing is arguably new, but that call is yours, not ours. <span class="idm">OPT-045</span></li>
+        <li><b>Should point-in-time embeddings be allowed at all?</b> The price-embedding half runs straight into the Kronos reopen bar; the text half can't exist until you open the text lane in the first place. <span class="idm">OPT-065</span></li>
+        <li><b>Should bars ever be cut by information flow instead of the clock?</b> The data constitution says 5m/15m only. The volume-clock opening range (M-04) is the one sanctioned narrow probe — going any further than that one experiment is a constitution change. <span class="idm">OPT-067</span></li>
+        <li><b>Should a "maximize Sharpe directly" objective ride bet #5, even though sequence models are last in line?</b> The Deep-Momentum lineage conflicts with the minting order (sequence models LAST, PLN-222); the objective alone might be separable from the lineage. <span class="idm">OPT-081</span></li>
+        <li><b>Same Kronos-adjacency question, other flavors:</b> the self-supervised pretraining families (TS2Vec/CoST/…) <span class="idm">OPT-090</span>, the latent-state representation card — whose kill-if-it-encodes-the-era clause is good hygiene if ever unparked <span class="idm">OPT-197/XS-7</span>, and the train-fold-SSL vs contaminated-control card <span class="idm">OPT-206/TS-4</span>. All mirror question 1 and fall with the same ruling.</li>
+      </ol>
+    </div>
+    <div class="bgroup"><div class="bt">Out-of-program business (2)</div>
+      <ol class="dsheet">
+        <li><b>Should we build hedging tools for a derivatives book we don't have?</b> Deep hedging is real research, but AIS holds no derivatives book to hedge — it sits outside the five bets entirely. <span class="idm">OPT-020</span></li>
+        <li><b>Should we build option-pricing engines?</b> Neural pricing / PDE / BSDE solvers are computational tooling for a business AIS doesn't run. <span class="idm">OPT-021</span></li>
+      </ol>
+    </div>
+    <div class="bgroup"><div class="bt">Open operator items — the questions actually waiting on your call</div>
+      <ol class="dsheet">
+        <li><b>Should the touch-decay test run, knowing it may contradict your own doctrine?</b> The #1 claim in the verification queue tests whether a level gets stronger or weaker with each touch. Your doctrine says more touches = more significance; the data may disagree — and either answer changes the shipped defended-level score. <span class="idm">A12/X8</span></li>
+        <li><b>Should "drain the account and reset" cycling be inside the simulator's action space?</b> It's gray under the prop firm's terms of service. Until you rule, it stays out. <span class="idm">S3-03</span></li>
+        <li><b>Should any event-day MECHANISM be adopted, given the lane died with six honest NULLs?</b> The FOMC/CPI statistics get verified either way — that's free. Trading them (including DM-03) needs your ruling that event-structure levels are a genuinely new class. <span class="idm">S6-B2/B9 + DM-03</span></li>
+        <li><b>Is an 18:00-reopen session in the program at all?</b> The doctrine is RTH-first. The data-coverage audit for the reopen setup already passed on whitelisted sources — the only thing missing is your scope call. <span class="idm">M-05</span></li>
+        <li><b>Will you verify the Topstep terms bundle?</b> Payout caps, hold-time minimums, the purchase throttle, the DDL double-payout option, the Apex bracket-ratio rule — all currently room intel, all entering the benchmark math once confirmed. <span class="idm">S3-18 et al.</span></li>
+        <li><b>Should we buy options-chain data?</b> A full point-in-time options surface (IV skew, term slope, dispersion, expiry proximity) needs a new data purchase AND proof it differs from the killed signed-0DTE lane. <span class="idm">OPT-011/056/072</span></li>
+        <li><b>Three confirmations:</b> ports stay at the SHADOW-READY ceiling with no live wiring (confirm the rule-5 adjudication) <span class="idm">S5 §A</span> · the image-gated weekly stat remains an item you export manually <span class="idm">C035/C075</span> · the 2-year-auction idea stays parked, not killed <span class="idm">DM-07</span>.</li>
+      </ol>
+    </div>
+  </div>
+  <details class="xp"><summary>original cards (expand) — preserved verbatim</summary>
+  <div class="tree">
+    <div class="bgroup"><div class="bt">Killed-lane-adjacent — needs a "genuinely new mechanism class" ruling (8)</div>
       <div class="ledgerwrap"><table class="ledger">
         <thead><tr><th>OPT</th><th>Option</th><th>Stated tension</th></tr></thead>
         <tbody>
@@ -916,6 +1208,7 @@
       </div>
     </div>
   </div>
+  </details>
   <div class="note"><b>Reading rule for LLMs:</b> nothing on this shelf may be promoted to CANDIDATE, staged, or prototyped without an explicit operator ruling recorded in the plan. "It looks promising in the literature" is not a ruling.</div>
 </section>
 
@@ -927,6 +1220,149 @@
   <span class="kc reex">OLD-METHOD KILL — re-examinable</span> the verdict predates the 2026 methodology fixes (the 4 trader-encoding false-reject bugs · the retired core-13 single-model tick-bar architecture · the pre-causal-fill-audit era) — the operator explicitly believes some of these were falsely killed; re-examination still requires his sign-off.
   <span class="kc sup">SUPERSEDED</span> retired for policy/custody/duplication reasons, not falsifying evidence.
   <b>Tally:</b> 14 killed lanes + 5 closed questions + 13 package-level rejections (= the PLN-216 register of 32) + the 54 correctly-excluded research options (20 live-option collisions + 34 explicit negatives) + 12 legacy-era verdicts + 4 superseded custody items.</p>
+  <div class="tree">
+    <div class="bgroup"><div class="bt">1 · Killed-lanes register (PLAN §7 — permanent receipts) — 14</div>
+      <div class="ledgerwrap tall"><table class="ledger plain">
+        <thead><tr><th style="min-width:180px">What it was</th><th>Why it died</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr><td>Binary win/loss label</td><td>Unlearnable — a coin flip — in the 5-design label shoot-out on the full fire corpus, a fair head-to-head under identical features and splits</td><td>label shoot-out, full fire corpus</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>R-regression label</td><td>Learnable but never profitable — same shoot-out, judged on kept-book money</td><td>label shoot-out</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>MFE-as-target label</td><td>Most learnable, worst money — TWICE; it secretly selects volatility. Kept as a forensic tool only</td><td>label shoot-out ×2</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Exit-geometry optimization</td><td>Closed question on the v4 corpus: the original exits were already near-optimal. Re-proposable only by citing a survivor's early-MAE loss concentration</td><td>LPC #9</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Re-entry capture</td><td>The excursion it chases is a volatility mirage; a full re-entry fleet was tested</td><td>LPC #9</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Kronos / frozen foundation embeddings</td><td>16 of 16 variants failed the frozen-embedding gate — the signal was real on its own (0.61) but 93% redundant with what we already had, and it hurt every fold. No foundation-model release reopens this by itself</td><td>LPC #2</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Text-LLM fine-tune route</td><td>Text pretraining does not transfer to market bars — demoted permanently</td><td>PLN-129</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Sub-second / MBO / orderbook-depth data</td><td>Failed repeatedly at every honest test (including the 2026-05-13 v122 filter NULLs) and is banned by the prime directive: do not acquire, compute, store, or expand. The old "revisit when OOS N≥100" notes are OVERRIDDEN by this ban; reopening needs operator sign-off regardless</td><td>LPC #1 · v122 NULLs 2026-05-13</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Signed 0DTE / gamma-flow timing</td><td>Signed flow tells you what's happening now, not what happens next — a nowcast, not a forecast; the SPXW and QQQ variants were killed. UNSIGNED risk context remains parked, not killed</td><td>LPC #10</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>1-minute timeframe as ML/signal domain</td><td>No edge over 5 years, the worst cost geometry, and it was 45% of the corpus mass in an untradeable domain. 1m may resolve FILLS only (the A10 carve-out)</td><td>LPC #7</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Manual labeling / eye labels as ongoing input</td><td>Retired for custody and policy, not label quality: the old-vault selection had leaked (only 5 of 26 picks survived clean reselection) and the prime directive bans the operator's eye as an input. The 680 historical labels remain archive/training material</td><td>LPC #4/#8</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>Repainting indicators</td><td>Mechanical dishonesty as a class — the value changes after the bar closes. Banned by construction; trap B7 now asserts it automatically in CI</td><td>trap B7</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Same-day externals (VIX/GEX/COT same-day values)</td><td>A look-ahead class. The receipt is the tainted VIX-term-structure incident: #1 importance in all 28 folds while tainted, vanished when properly lagged. Prior-day / real release lag only</td><td>VIX-TS incident</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Importance-based feature selection without money-lift</td><td>The importance-thief scar: nq_es_spread_zscore improved fold counts and destroyed the holdout (win rate 63→51). Money-lift decides seats, not importance scores</td><td>burned-in lesson #5</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="bgroup"><div class="bt">2 · Closed questions / retired roles — 5</div>
+      <div class="ledgerwrap tall"><table class="ledger plain">
+        <thead><tr><th style="min-width:180px">What it was</th><th>Why it died</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr><td>Veto judge as the alpha factory</td><td>The judge halves losses but cannot cross zero at useful volume — an honest capped result, not a bug. Retained as a future secondary gate over strategies that are already positive on their own</td><td>LPC #3</td><td><span class="kc clean">CLEAN KILL</span> (role)</td></tr>
+          <tr><td>First-touch (+1R-before−1R) label</td><td>Its early appeal was label contamination; cleanly anchored it is barely learnable. The structural multi-level variant (OPT-045) sits on the SCOPE shelf — that is an adjudication, not a reopen</td><td>PLN-139</td><td><span class="kc clean">CLEAN KILL</span> (overturned)</td></tr>
+          <tr><td>"Weak-and-trustworthy auto-ships" doctrine</td><td>Amended by the Kronos dilution evidence: a feature can be trustworthy AND real and still hurt the book — money-lift decides</td><td>PLN-138</td><td><span class="kc sup">SUPERSEDED</span> (doctrine)</td></tr>
+          <tr><td>Event/calendar mechanism lane</td><td>Cleared with 6 honest NULLs — do not re-propose without a new mechanism class. DM-03 and claims S6-B2/B9 sit against this receipt pending operator adjudication</td><td>PLN-140</td><td><span class="kc clean">CLEAN KILL</span> (lane)</td></tr>
+          <tr><td>Old Q2 vault (2026-04 → 06-04) as "holy OOS"</td><td>Selection had peeked at it — demoted to a design-touched robustness check, opened once, read asymmetrically: a fail is an alarm, a pass is only weak evidence</td><td>LPC #5/#6</td><td><span class="kc sup">SUPERSEDED</span> (custody)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="bgroup"><div class="bt">3 · Package-level rejections, 2026-07-10/11 (do-not-re-propose receipts) — 13</div>
+      <div class="ledgerwrap tall"><table class="ledger plain">
+        <thead><tr><th style="min-width:180px">What it was</th><th>Why it died</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr><td>Hour-boundary front-run (buy :58, sell :01) <span class="idm">DM-05</span></td><td>Fails the cost law by construction: a ~3-minute market-in/market-out hold pays 2–3 NQ points round trip against a few points of expected move, with no natural stop — and widening the stop to fix the ratio is the banned trick</td><td>digest reject</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Fail-fast time-invalidation wrapper <span class="idm">DM-06</span></td><td>A time-stop is an exit atom, and exit geometry is a closed question. Re-proposable only by citing a survivor's early-MAE loss concentration</td><td>exit-geometry lane</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>2-year-auction demand gate <span class="idm">DM-07</span></td><td>Out of program shape — a new data feed, an overnight hold the stack auto-flattens, and a daily timeframe. Not falsified; parked as operator optionality</td><td>ledger-park</td><td><span class="kc sup">SUPERSEDED</span> (park)</td></tr>
+          <tr><td>Feature 1.18 bar3_reversal_exit</td><td>It's an exit — the closed question again</td><td>closed exit question</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Exit-layer policy atoms <span class="idm">ATOM-01…06/08/09/10/31</span></td><td>Closed exit question. ATOM-07 is note-only; ATOM-21/22/23 (adds, pyramiding, probe-then-full) are PARKED as outside the single-entry program, not killed</td><td>closed exit question</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>The 117-claim batch as a batch</td><td>A multiple-testing swamp — testing 117 claims at once guarantees lucky imposters. Superseded by the sanctioned per-card queue with FDR-within-group</td><td>S6 queue design</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>Port-logic repaint exclusions <span class="idm">X1–X8</span></td><td>Kernel regression, retro-anchored/assumed pivots, auto trendlines, projection cones, mutating ICT zones — all redraw their own past; verified per row and endorsed</td><td>verified per row</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Supplier's 12 mechanism self-rejections + ~80 exit-stack records</td><td>The mine's own curator dropped them (same-hour collision, CPI straddle, 5-point-stop GEX bracket, plain band fade, …) — we checked and endorsed every call; named-and-dropped</td><td>endorsed 07-11</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Fantasy-fill space (PF 70 · 100% WR · Renko/HA · no-stop systems)</td><td>Fill fantasies, not strategies — quarantined as documentation only</td><td>S7 T4</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>PineForge execution route for ports</td><td>Policy: mined scripts get decomposed into sub-components, never executed as-is, and nothing gets wired into HYDRA</td><td>brief rule 5</td><td><span class="kc sup">SUPERSEDED</span> (route)</td></tr>
+          <tr><td>NR4/NR7 port (B1) · premarket relative volume (C16)</td><td>Both duplicate features we already have (is_nr4/is_nr7 + range_compression; rvol_cum_tod) — dropped, the param-row residue survives</td><td>dedupe checks 07-11</td><td><span class="kc sup">SUPERSEDED</span> (dup)</td></tr>
+          <tr><td>Zarattini momentum band / OHLCV momentum bands</td><td>Fails all 4 promotion gates; bar-level directional entry signals are a structurally dead category on ES/NQ — presume cost-dead</td><td>memory 07-04</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Non-causal touch-veto stream family (16 staged streams)</td><td>All 16 carried the fill-on-touch-bar-extreme bug — the backtest filled at prices the strategy could never have gotten. All dead; the causal-fill audit is now mandatory and encoded as traps C1/C2</td><td>memory 07-06</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="bgroup"><div class="bt">4 · Correctly-excluded research options — live-option collisions (20 OPT ids in 8 rows)</div>
+      <div class="ledgerwrap tall"><table class="ledger plain">
+        <thead><tr><th style="min-width:180px">What it was</th><th>Why it died</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr><td>Book-data microstructure chain <span class="idm">OPT-004, 049, 050, 051, 070</span></td><td>Stationary order-flow imbalance → fill survival → toxicity → execution, queue-imbalance/microprice, depth/cancel features, LOB data acquisition — every link requires the banned depth/MBO data</td><td>LPC #1</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Market-making + learned residual <span class="idm">OPT-016 = 185/MICRO-7</span></td><td>Requires book/queue data and is a business AIS doesn't run</td><td>LPC #1</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>DeepLOB lineage benchmarks <span class="idm">OPT-080</span></td><td>Banned data domain, and classification accuracy is not alpha (OPT-175)</td><td>LPC #1</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>LOB simulators + validity checklist + triangulation <span class="idm">OPT-094, 136, 140 = 186/MICRO-8</span></td><td>Calibrating them requires the banned depth lane; our bar-level replay needs are already met by trap C5 plus judge-in-loop replay</td><td>LPC #1</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>OFI benchmark + event-horizon latency map <span class="idm">OPT-179, 180 (MICRO-1/2)</span></td><td>Book data plus sub-second horizons — double-banned</td><td>LPC #1</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Behavioral event-drift mechanisms <span class="idm">OPT-032</span></td><td>The event/calendar lane was cleared with 6 honest NULLs</td><td>PLN-140</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>Time-series foundation-model alpha priors <span class="idm">OPT-036, 037, 038, 091, 092</span></td><td>Generic and finance TSFM zoos plus Chronos-2 panel transfer: our own CatBoost beat every tested TSFM (OPT-171), and the frozen-embedding kills apply — no foundation-model release reopens these lanes by itself</td><td>OPT-171 · LPC #2/#3</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>"Package QA upgrades a record to alpha evidence"</td><td>QA is structural only — parsing, hashes and counts never validate design quality or profitability</td><td>LPC #11</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="bgroup"><div class="bt">5 · The 34 explicit negatives (OPT-145…178) — all verified ABSENT from the plan (alignment confirmed 07-11)</div>
+      <div class="ledgerwrap"><table class="ledger">
+        <thead><tr><th>OPT</th><th>Negative (what must NOT be in the plan)</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr><td>OPT-145</td><td>No ML rescue of Strategy 001 (parked NO_DEPLOYABLE_WF_CANDIDATE) — filters cannot manufacture edge in a negative base</td><td>PROG §2; PLN-137; REC §8.12</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-146</td><td>No more end-to-end raw-OHLCV LSTM/Transformer direction sweeps</td><td>PROG §2; Kronos 16/16 (PLN-128)</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-147</td><td>Never optimize AUC/F1/RMSE/RankIC without net trading utility</td><td>PROG §2; PLN-164</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-148</td><td>Next-tick OFI accuracy is not alpha (useful horizon ≈ two price changes)</td><td>PROG §2; moot under LPC #1</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-149</td><td>Signed 0DTE/gamma-flow timing stays closed; only new PIT unsigned regime-risk may re-enter</td><td>PLN-131; LPC #10</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-150</td><td>No autonomous LLM trading agents (extraction/hypothesis roles only)</td><td>PROG §2; PLN-166/167</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-151</td><td>No backtests with ordinary historical LLM embeddings (training-corpus look-ahead)</td><td>PROG §2; PLN-129</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-152</td><td>No RL with action-independent reward; no offline policy without fills/impact/counterfactual execution</td><td>PROG §2; PLN-152 parked</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-153</td><td>No unbaselined crypto→ES/NQ transfer</td><td>PROG §2; scope</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-154</td><td>Synthetic data never in validation/test sets</td><td>PROG §2; attached verbatim to adopted OPT-093</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-155</td><td>No current-constituent equity backtests / omitted delistings / microcap results</td><td>PROG §2 (moot, no equities)</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-156</td><td>No mechanism-free indicator-zoo / symbolic-expression mining without trial ledger</td><td>PROG §2; PLN-165/166 are the sanctioned version</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-157</td><td>No raw prices / raw levels / era-identifying clocks as features</td><td>PROG §2; stationarity lesson (PLN-162)</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-158</td><td>No unfinished HTF bars, touch-bar extremes, same-bar hindsight fills, pre-publication text, same-day options OI</td><td>PROG §2; PLN-084/086/135</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-159</td><td>Do not reopen exit/re-entry giveback without a genuinely different mechanism</td><td>PLN-126/127; LPC #9</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-160</td><td>No tiny per-family exceptions before global basket/TF policies win</td><td>PROG §2</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-161</td><td>Do not spend 2025 CONFIRM or inspect 2026 to decide what to try — protected periods die on inspection</td><td>PROG §2/§6; PLN-157/158</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-162</td><td>MBO expansion killed (100 ms reconstruction proposal superseded)</td><td>LPC #1; REC §5.2</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-163</td><td>Kronos / frozen foundation embeddings killed — version records are provenance, not a reopen signal</td><td>LPC #2; REC §6/§8.10</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-164</td><td>Pooled take/skip meta-filter retired as alpha factory</td><td>LPC #3; REC §8.11</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-165</td><td>Eye labels forbidden as roster or supervised target</td><td>LPC #4/#8 (custody)</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>OPT-166</td><td>1m ES/NQ killed as ML domain (5m/15m only)</td><td>LPC #7</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-167</td><td>Binary win/loss, R-regression, MFE-target, exit-opt, re-entry — closed label-engineering questions</td><td>PLN-123…127; LPC #9</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-168</td><td>monster24 stays dead — must not be resurrected from backtest summaries</td><td>REC §8.15; failed the FORWARD/live gate (forward evidence is the only real judge)</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-169</td><td>HMM hard-regime gating reduced performance locally; hindsight hard-regime strategies are the fragile pattern — this tile sits DELIBERATELY next to Phase 5's live "regime thresholds" CANDIDATE</td><td>REC §8.14; dead-ends archive (daily-resolution HMM states on sub-minute tick bars, retired architecture)</td><td><span class="kc reex">RE-EXAMINABLE</span> — old-era resolution mismatch; the sanctioned re-examination is the soft FILTERED change-point overlay (OPT-006/087), which must beat this receipt as its null, with operator sign-off</td></tr>
+          <tr><td>OPT-170</td><td>Strategy-001 pool-sweep/reclaim ML route failed its validation gate</td><td>REC §8.12</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-171</td><td>TSFM local negatives — CatBoost beat tested TSFMs pre-cost; separate study negative at 20 bps; DLinear failed the economic bar; IRM failed cross-environment</td><td>REC §6/§8.1-8.5</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-172</td><td>Practitioner anti-patterns banned — zero-cost/touch-fill Pine backtests, N=4, selection-exposed "private 90%", post-hoc filters without trial counting</td><td>PRAC §3; PLN-150</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-173</td><td>Red-team downgrades respected — Portfolio-ML is NOT "proven frontier"; pooled-LOB universality unproven for futures</td><td>SRT corrected claims</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-174</td><td>"ML consistently beats HAR/GARCH and survives crises" — REJECTED (literature contradictory; motivates the HAR-first residue)</td><td>SRT; TS appendix</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-175</td><td>DeepLOB/TLOB classification performance is not alpha; spread-aware labels reduce apparent predictability</td><td>SRT; MICRO (moot under LPC #1)</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-176</td><td>Prompt-hiding ("pretend it is 2008") does not fix LLM look-ahead</td><td>SRT; attached to adopted OPT-138</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-177</td><td>Withdrawn Kim–Muhn–Nikolaev financial-statement-LLM paper = zero positive evidence</td><td>SRT; arXiv 2407.17866 (withdrawn)</td><td><span class="kc clean">CLEAN</span></td></tr>
+          <tr><td>OPT-178</td><td>Vote-counting / shared-data reimplementation ≠ independent replication</td><td>SRT coverage warning; intake checklist (OPT-144)</td><td><span class="kc clean">CLEAN</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="bgroup"><div class="bt">6 · Legacy-era verdicts (pre-2026 methodology fixes) — 12 · read these with care</div>
+      <p class="plainintro">Amber rows are the OLD-METHOD kills — verdicts reached with methodology since found broken. The operator explicitly believes some of these were falsely killed; they are still not open lanes — he decides if and how any is re-asked.</p>
+      <div class="ledgerwrap tall"><table class="ledger plain">
+        <thead><tr><th style="min-width:180px">What it was</th><th>Why it died — and why the verdict is suspect</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr class="rowreex"><td>Short side "structurally dead" (12+ attempts)</td><td>Every attempt lived inside the retired core-13 single-model tick-bar architecture (R1–R13, 2026-02/03). The label-family map (07-04) lists 3 short framings as the unbuilt frontier — re-encoding as standalone mechanisms needs operator sign-off, not a rerun of the old pipeline</td><td>R1–R13 · label map 07-04</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>Min-R:R filter "blocks the best trades"</td><td>True of the retired monster model — its strongest signals were low-R:R near support at 62% win rate — a property of THAT model, not a law. The current cost law supersedes the question at design time</td><td>retired monster model</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>Trailing exits &lt; fixed TP 2:1</td><td>Old-architecture verdict (including the bugged-then-fixed SuperTrend PF-110 incident) — but note: the CLEAN exit-geometry kill on the v4 corpus closes the practical door anyway; re-exam only via a genuinely different mechanism</td><td>old architecture · v4 exit kill</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>Dual-model &lt; single model</td><td>OR/AND/ensemble/independent gates all failed on the retired architecture (2026-02-28). But the modern disjoint-books finding — different labels pick near-disjoint books — is evidence FOR multi-judge voting, now a Phase-5 candidate</td><td>2026-02-28 tests</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>Calendar features "add noise" (13/28 FAIL)</td><td>An old-era feature ablation at tick bars. Calendar CONTEXT (FOMC/CPI proximity) is in the 195 today — the CLEAN receipt in this area is the event-MECHANISM lane (6 NULLs), which is a different claim</td><td>tick-bar ablation</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>HMM regime features at tick bars (13/28 FAIL)</td><td>Daily-resolution regime states applied to sub-minute bars — a resolution mismatch (trader-encoding bug #2). Same re-exam route as OPT-169: a filtered soft overlay, with operator sign-off</td><td>trader-encoding bug #2</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>Vol-adaptive barriers / structural stop verdicts</td><td>Label-change tests on the retired model (6/28, 16/28). Bet #2's cost-geometry race is the modern, sanctioned re-ask of the stop-width question</td><td>retired-model label tests</td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr class="rowreex"><td>Trader-methodology REJECTs — Pablo · Smashelito · Firefly · Hsaka (as tested pre-fix)</td><td>All four verdicts carried one or more of the 4 systematic false-reject bugs: post-model-filter framing · resolution mismatch · single-factor p-values on confluence setups · a 17/28 fold gate on rare events. The operator explicitly believes these were falsely killed. Sanctioned route: standalone encoding at bar level with bootstrap-CI (largely done via the HYDRA setup stack); the Pablo sub-second/MBO retry collides with the MBO ban and stays closed</td><td><span class="num">feedback_trader_methodology_testing_bug.md</span></td><td><span class="kc reex">OLD-METHOD KILL</span></td></tr>
+          <tr><td>MBO sub-second filters on v122 (2026-05-13, 3+3 NULLs)</td><td>Honest NULLs at a tiny out-of-sample N, with their own "revisit when N≥100" clause — mooted by the later hard MBO ban. Kept as evidence the lane was tested honestly before being banned</td><td>2026-05-13 · LPC #1</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>NQ-v2 feature phases (reverted)</td><td>Holdout falsification: win rate 56.7→50.6 despite better fold counts — the origin of the importance-thief lesson. Its descendant C18 family is staged WITH the watchlist</td><td>holdout falsification</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>CCM-FVG v0 OOS fail + overnight data gap</td><td>The time-of-day edge was an artifact of ~1% overnight coverage in the DEV 5m data. CHECK 2 (07-11) quantified the scar and produced the M-05 data whitelist — the bug class is now a named trap</td><td>memory 07-04 · CHECK 2 07-11</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+          <tr><td>L2 book features at 5m bars</td><td>NaN-pattern leakage plus distribution shift — 0 live signals in 32 days after backtesting fine — and the data domain itself is now banned</td><td>32-day live NULL · LPC #1</td><td><span class="kc clean">CLEAN KILL</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="bgroup"><div class="bt">7 · Superseded custody / policy items — 4</div>
+      <div class="ledgerwrap tall"><table class="ledger plain">
+        <thead><tr><th style="min-width:180px">What it was</th><th>Why it was retired</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
+        <tbody>
+          <tr><td>April-2026+ as "untouched holy OOS"</td><td>Under corpus v5, 2026-04-01→06-04 is design-touched robustness data — earlier design choices had already peeked at it; the TRUE vault starts 2026-06-05</td><td>LPC #5</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>Old final-vault boundary</td><td>The current true vault grows forward and is opened once after ~84 trading days; no rescue tuning follows the read</td><td>LPC #6</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>Human-state research splits (pre-2025 SELECT / 2025 CONFIRM)</td><td>Retained only inside that historical lane's own audit; never defines the current roster or vault</td><td>LPC §2</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+          <tr><td>Digest's "park ports as HYDRA-live-book material"</td><td>Brief rule 5 (written later) reopened port-logic re-implementation as sub-component decomposition; SHADOW-READY ceiling, no wiring</td><td>brief rule 5</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <details class="xp"><summary>original cards (expand) — preserved verbatim</summary>
   <div class="tree">
     <div class="bgroup"><div class="bt">1 · Killed-lanes register (PLAN §7 — permanent receipts) — 14</div>
       <div class="opts">
@@ -984,47 +1420,6 @@
         <div class="opt sup"><span class="tag">SUPERSEDED · LPC #11</span><b>"Package QA upgrades a record to alpha evidence"</b><span class="d"><span class="kc sup">SUPERSEDED</span>QA is structural only — parsing/hashes/counts never validate design quality or profitability</span></div>
       </div>
     </div>
-    <div class="bgroup"><div class="bt">5 · The 34 explicit negatives (OPT-145…178) — all verified ABSENT from the plan (alignment confirmed 07-11)</div>
-      <div class="ledgerwrap"><table class="ledger">
-        <thead><tr><th>OPT</th><th>Negative (what must NOT be in the plan)</th><th>Receipt</th><th>Kill-confidence</th></tr></thead>
-        <tbody>
-          <tr><td>OPT-145</td><td>No ML rescue of Strategy 001 (parked NO_DEPLOYABLE_WF_CANDIDATE) — filters cannot manufacture edge in a negative base</td><td>PROG §2; PLN-137; REC §8.12</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-146</td><td>No more end-to-end raw-OHLCV LSTM/Transformer direction sweeps</td><td>PROG §2; Kronos 16/16 (PLN-128)</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-147</td><td>Never optimize AUC/F1/RMSE/RankIC without net trading utility</td><td>PROG §2; PLN-164</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-148</td><td>Next-tick OFI accuracy is not alpha (useful horizon ≈ two price changes)</td><td>PROG §2; moot under LPC #1</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-149</td><td>Signed 0DTE/gamma-flow timing stays closed; only new PIT unsigned regime-risk may re-enter</td><td>PLN-131; LPC #10</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-150</td><td>No autonomous LLM trading agents (extraction/hypothesis roles only)</td><td>PROG §2; PLN-166/167</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-151</td><td>No backtests with ordinary historical LLM embeddings (training-corpus look-ahead)</td><td>PROG §2; PLN-129</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-152</td><td>No RL with action-independent reward; no offline policy without fills/impact/counterfactual execution</td><td>PROG §2; PLN-152 parked</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-153</td><td>No unbaselined crypto→ES/NQ transfer</td><td>PROG §2; scope</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-154</td><td>Synthetic data never in validation/test sets</td><td>PROG §2; attached verbatim to adopted OPT-093</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-155</td><td>No current-constituent equity backtests / omitted delistings / microcap results</td><td>PROG §2 (moot, no equities)</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-156</td><td>No mechanism-free indicator-zoo / symbolic-expression mining without trial ledger</td><td>PROG §2; PLN-165/166 are the sanctioned version</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-157</td><td>No raw prices / raw levels / era-identifying clocks as features</td><td>PROG §2; stationarity lesson (PLN-162)</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-158</td><td>No unfinished HTF bars, touch-bar extremes, same-bar hindsight fills, pre-publication text, same-day options OI</td><td>PROG §2; PLN-084/086/135</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-159</td><td>Do not reopen exit/re-entry giveback without a genuinely different mechanism</td><td>PLN-126/127; LPC #9</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-160</td><td>No tiny per-family exceptions before global basket/TF policies win</td><td>PROG §2</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-161</td><td>Do not spend 2025 CONFIRM or inspect 2026 to decide what to try — protected periods die on inspection</td><td>PROG §2/§6; PLN-157/158</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-162</td><td>MBO expansion killed (100 ms reconstruction proposal superseded)</td><td>LPC #1; REC §5.2</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-163</td><td>Kronos / frozen foundation embeddings killed — version records are provenance, not a reopen signal</td><td>LPC #2; REC §6/§8.10</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-164</td><td>Pooled take/skip meta-filter retired as alpha factory</td><td>LPC #3; REC §8.11</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-165</td><td>Eye labels forbidden as roster or supervised target</td><td>LPC #4/#8 (custody)</td><td><span class="kc sup">SUPERSEDED</span></td></tr>
-          <tr><td>OPT-166</td><td>1m ES/NQ killed as ML domain (5m/15m only)</td><td>LPC #7</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-167</td><td>Binary win/loss, R-regression, MFE-target, exit-opt, re-entry — closed label-engineering questions</td><td>PLN-123…127; LPC #9</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-168</td><td>monster24 stays dead — must not be resurrected from backtest summaries</td><td>REC §8.15; failed the FORWARD/live gate (forward evidence is the only real judge)</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-169</td><td>HMM hard-regime gating reduced performance locally; hindsight hard-regime strategies are the fragile pattern — this tile sits DELIBERATELY next to Phase 5's live "regime thresholds" CANDIDATE</td><td>REC §8.14; dead-ends archive (daily-resolution HMM states on sub-minute tick bars, retired architecture)</td><td><span class="kc reex">RE-EXAMINABLE</span> — old-era resolution mismatch; the sanctioned re-examination is the soft FILTERED change-point overlay (OPT-006/087), which must beat this receipt as its null, with operator sign-off</td></tr>
-          <tr><td>OPT-170</td><td>Strategy-001 pool-sweep/reclaim ML route failed its validation gate</td><td>REC §8.12</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-171</td><td>TSFM local negatives — CatBoost beat tested TSFMs pre-cost; separate study negative at 20 bps; DLinear failed the economic bar; IRM failed cross-environment</td><td>REC §6/§8.1-8.5</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-172</td><td>Practitioner anti-patterns banned — zero-cost/touch-fill Pine backtests, N=4, selection-exposed "private 90%", post-hoc filters without trial counting</td><td>PRAC §3; PLN-150</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-173</td><td>Red-team downgrades respected — Portfolio-ML is NOT "proven frontier"; pooled-LOB universality unproven for futures</td><td>SRT corrected claims</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-174</td><td>"ML consistently beats HAR/GARCH and survives crises" — REJECTED (literature contradictory; motivates the HAR-first residue)</td><td>SRT; TS appendix</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-175</td><td>DeepLOB/TLOB classification performance is not alpha; spread-aware labels reduce apparent predictability</td><td>SRT; MICRO (moot under LPC #1)</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-176</td><td>Prompt-hiding ("pretend it is 2008") does not fix LLM look-ahead</td><td>SRT; attached to adopted OPT-138</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-177</td><td>Withdrawn Kim–Muhn–Nikolaev financial-statement-LLM paper = zero positive evidence</td><td>SRT; arXiv 2407.17866 (withdrawn)</td><td><span class="kc clean">CLEAN</span></td></tr>
-          <tr><td>OPT-178</td><td>Vote-counting / shared-data reimplementation ≠ independent replication</td><td>SRT coverage warning; intake checklist (OPT-144)</td><td><span class="kc clean">CLEAN</span></td></tr>
-        </tbody>
-      </table></div>
-    </div>
     <div class="bgroup"><div class="bt">6 · Legacy-era verdicts (pre-2026 methodology fixes) — 12 · read these with care</div>
       <div class="opts">
         <div class="opt deadre"><span class="tag">KILLED-REEXAMINABLE</span><b>Short side "structurally dead" (12+ attempts)</b><span class="d"><span class="kc reex">OLD-METHOD KILL</span>every attempt lived inside the retired core-13 single-model tick-bar architecture (R1–R13, 2026-02/03); the label-family map (07-04) lists 3 short framings as the unbuilt frontier — re-encoding as standalone mechanisms needs operator sign-off, not a rerun of the old pipeline</span></div>
@@ -1050,6 +1445,7 @@
       </div>
     </div>
   </div>
+  </details>
   <div class="note"><b>Inheritance rule (repeat, because it is load-bearing):</b> CLEAN KILL entries are permanent receipts — re-proposal requires a genuinely new mechanism class, an explicit falsifier, clean custody, full trial accounting, AND operator approval. RE-EXAMINABLE entries are not open lanes — they are flagged scars whose verdicts used retired methodology; the operator decides if and how any is re-asked. SUPERSEDED entries were never falsified — do not cite them as evidence a mechanism failed.</div>
 </section>
 
